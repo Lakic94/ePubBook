@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "e-pub-book",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "e-pub-book": {
+      "projectType": "application",
+      "root": "apps/e-pub-book",
+      "sourceRoot": "apps/e-pub-book/src",
+      "prefix": "e-pub-book",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/e-pub-book",
+            "index": "apps/e-pub-book/src/index.html",
+            "main": "apps/e-pub-book/src/main.ts",
+            "polyfills": "apps/e-pub-book/src/polyfills.ts",
+            "tsConfig": "apps/e-pub-book/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/e-pub-book/src/favicon.ico",
+              "apps/e-pub-book/src/assets"
+            ],
+            "styles": ["apps/e-pub-book/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/e-pub-book/src/environments/environment.ts",
+                  "with": "apps/e-pub-book/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "e-pub-book:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "e-pub-book:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "e-pub-book:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/e-pub-book/src/**/*.ts",
+              "apps/e-pub-book/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/e-pub-book"],
+          "options": {
+            "jestConfig": "apps/e-pub-book/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "e-pub-book-e2e": {
+      "root": "apps/e-pub-book-e2e",
+      "sourceRoot": "apps/e-pub-book-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/e-pub-book-e2e/cypress.json",
+            "tsConfig": "apps/e-pub-book-e2e/tsconfig.e2e.json",
+            "devServerTarget": "e-pub-book:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "e-pub-book:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/e-pub-book-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
